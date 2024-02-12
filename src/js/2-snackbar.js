@@ -1,26 +1,28 @@
 import iziToast from 'izitoast';
-import "izitoast/dist/css/iziToast.min.css"
+import "izitoast/dist/css/iziToast.min.css";
 
-const statementResolveRef = document.querySelector('input[data-fulfilled]')
-const submitButtonRef = document.querySelector('form')
-const delayInputRef = document.querySelector('input[data-delay')
+const statementResolveRef = document.querySelector('input[value="fulfilled"]');
+const submitButtonRef = document.querySelector('form');
+const delayInputRef = document.querySelector('input[name="delay"]');
 
 
-submitButtonRef.addEventListener('submit', onFormSubmit)
+submitButtonRef.addEventListener('submit', onFormSubmit);
 
 
 function onFormSubmit(evt) {
-  evt.preventDefault()
-  let delay = Number(delayInputRef.value)
+  evt.preventDefault();
+  const delay = Number(delayInputRef.value);
   createPromise(delay).then((delay) => {
-        iziToast.show({
-    message: `✅ Fulfilled promise in ${delay}ms`
-});
+        iziToast.success({
+    title: 'OK',
+    message: `✅ Fulfilled promise in ${delay}ms`,
+});;
       })
       .catch((delay) => {
-        iziToast.show({
-    message: `❌ Rejected promise in ${delay}ms`
-});
+        iziToast.error({
+    title: 'Error',
+    message: `❌ Rejected promise in ${delay}ms`,
+});;
       });
 }
 
@@ -32,12 +34,12 @@ function createPromise(delay) {
       if (statementResolveRef.checked) {
         // Fulfill
         resolve(delay);
-      } else  {
+      } else {
         // Reject
         reject(delay);
       }
-    }, delay)
+    }, delay);
 
 
-  })
-}
+  });
+};

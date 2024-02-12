@@ -57,6 +57,7 @@ function addingZero(value) {
   return value.toString().padStart(2, '0');
 }
 function onBtnClick() {
+     btnRef.disabled = true;
   updateDateTime();
   timerId = setInterval(() => updateDateTime(), 1000);
 }
