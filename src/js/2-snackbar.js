@@ -2,11 +2,12 @@ import iziToast from 'izitoast';
 import "izitoast/dist/css/iziToast.min.css";
 
 const statementResolveRef = document.querySelector('input[value="fulfilled"]');
-const submitButtonRef = document.querySelector('form');
+const statementRejectRef = document.querySelector('input[value="rejected"]');
+const formRef = document.querySelector('form');
 const delayInputRef = document.querySelector('input[name="delay"]');
 
 
-submitButtonRef.addEventListener('submit', onFormSubmit);
+formRef.addEventListener('submit', onFormSubmit);
 
 
 function onFormSubmit(evt) {
@@ -16,13 +17,13 @@ function onFormSubmit(evt) {
         iziToast.success({
     title: 'OK',
     message: `✅ Fulfilled promise in ${delay}ms`,
-});;
+});
       })
       .catch((delay) => {
         iziToast.error({
     title: 'Error',
     message: `❌ Rejected promise in ${delay}ms`,
-});;
+});
       });
 }
 
@@ -34,7 +35,7 @@ function createPromise(delay) {
       if (statementResolveRef.checked) {
         // Fulfill
         resolve(delay);
-      } else {
+      } else if (statementRejectRef.checked) {
         // Reject
         reject(delay);
       }
