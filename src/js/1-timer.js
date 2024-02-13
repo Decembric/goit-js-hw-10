@@ -9,6 +9,10 @@ const hoursRef = document.querySelector('span[data-hours]');
 const daysRef = document.querySelector('span[data-days]');
 const minutesRef = document.querySelector('span[data-minutes]');
 const secondsRef = document.querySelector('span[data-seconds]');
+
+let timerId;
+btnRef.disabled = true;
+
 const datetimePicker = flatpickr('#datetime-picker', {
   enableTime: true,
   time_24hr: true,
@@ -18,16 +22,18 @@ const datetimePicker = flatpickr('#datetime-picker', {
     let userSelectedDate = selectedDates[0].getTime();
     const dateNow = new Date();
     if (userSelectedDate < dateNow.getTime()) {
-      iziToast.show({
-    message: 'Please choose a date in the future'
-});
+       iziToast.show({
+        message: 'Please choose a date in the future',
+        messageColor: '#FFF',
+        backgroundColor: '#EF4040',
+        position: 'topCenter',
+      });
       btnRef.disabled = true;
     } else {
       btnRef.disabled = false;
     }
   },
 });
-let timerId;
 function convertMs(ms) {
   const second = 1000;
   const minute = second * 60;
@@ -44,21 +50,25 @@ function updateDateTime() {
   const currentDate = new Date().getTime();
   const difference = selectedDate - currentDate;
   const { days, hours, minutes, seconds } = convertMs(difference);
-  daysRef.textContent = days > 0 ? addingZero(days) : '0';
-  hoursRef.textContent = hours > 0 ? addingZero(hours) : '0';
-  minutesRef.textContent = minutes > 0 ? addingZero(minutes) : '0';
-  secondsRef.textContent = seconds > 0 ? addingZero(seconds) : '0';
+  daysRef.textContent = days > 0 ? addLeadingZero(days) : '0';
+  hoursRef.textContent = hours > 0 ? addLeadingZero(hours) : '0';
+  minutesRef.textContent = minutes > 0 ? addLeadingZero(minutes) : '0';
+  secondsRef.textContent = seconds > 0 ? addLeadingZero(seconds) : '0';
   if (difference <= 0) {
     clearInterval(timerId);
     return;
   }
+  if (days === '00' && hours === '00' && minutes === '00' && seconds === '00') {
+    onStartButtonClick()
+    clearInterval(timerId)
+  }
 }
-function addingZero(value) {
+function addLeadingZero(value) {
   return value.toString().padStart(2, '0');
 }
-function onBtnClick() {
+function onStartButtonClick() {
      btnRef.disabled = true;
   updateDateTime();
   timerId = setInterval(() => updateDateTime(), 1000);
 }
-btnRef.addEventListener('click', onBtnClick);
+btnRef.addEventListener('click', onStartButtonClick);

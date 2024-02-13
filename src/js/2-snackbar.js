@@ -1,8 +1,6 @@
 import iziToast from 'izitoast';
 import "izitoast/dist/css/iziToast.min.css";
 
-const statementResolveRef = document.querySelector('input[value="fulfilled"]');
-const statementRejectRef = document.querySelector('input[value="rejected"]');
 const formRef = document.querySelector('form');
 const delayInputRef = document.querySelector('input[name="delay"]');
 
@@ -13,7 +11,8 @@ formRef.addEventListener('submit', onFormSubmit);
 function onFormSubmit(evt) {
   evt.preventDefault();
   const delay = Number(delayInputRef.value);
-  createPromise(delay).then((delay) => {
+  const statement = formRef.state.value;
+  createPromise({ delay, statement }).then((delay) => {
         iziToast.success({
     title: 'OK',
     message: `✅ Fulfilled promise in ${delay}ms`,
@@ -27,15 +26,15 @@ function onFormSubmit(evt) {
       });
 }
 
-function createPromise(delay) {
+function createPromise({ delay, statement }) {
   
   return new Promise((resolve, reject) => {
    
     setTimeout(() => {
-      if (statementResolveRef.checked) {
+      if (statement === "fulfilled") {
         // Fulfill
         resolve(delay);
-      } else if (statementRejectRef.checked) {
+      } else  {
         // Reject
         reject(delay);
       }
